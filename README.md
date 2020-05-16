@@ -12,3 +12,12 @@ On `rebar.config`, add
 ]}.
 ```
 
+## usage
+
+```erlang
+Pw = <<"some_password">>,
+Cost = 12,
+{ok, Hash} = rbcrypt:hash(Pw, Cost),
+{ok, true} = rbcrypt:verify(Pw, Hash),
+ok.
+```
