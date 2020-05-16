@@ -1,0 +1,9 @@
+{application, rbcrypt, [
+    {description, "bcrypt"},
+    {vsn, git},
+    {registered, []},
+    {applications, [kernel, stdlib]},
+    {maintainers, ["Jihyun Yu"]},
+    {licenses, ["APACHE"]},
+    {links, [{"GitHub", "https://github.com/yjh0502/rbcrypt"}]}
+]}.
