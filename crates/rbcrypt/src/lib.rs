@@ -1,37 +1,22 @@
-#[macro_use]
-extern crate rustler;
-
-use rustler::schedule::SchedulerFlags;
 use rustler::types::Binary;
 use rustler::Error::BadArg;
 use rustler::{Encoder, Env, NifResult, Term};
 
 mod atoms {
-    rustler_atoms! {
-        atom ok;
-        atom t = "true";
-        atom f = "false";
+    rustler::atoms! {
+        ok,
+        t = "true",
+        f = "false",
 
-        atom internal;
+        internal,
     }
 }
 
-rustler_export_nifs!(
-    "rbcrypt",
-    [
-        ("nif_hash", 2, hash, SchedulerFlags::DirtyCpu),
-        ("nif_verify", 2, verify, SchedulerFlags::DirtyCpu)
-    ],
-    None
-);
+rustler::init!("rbcrypt", [nif_hash, nif_verify]);
 
-fn hash<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    if args.len() != 2 {
-        return Err(BadArg);
-    }
-
-    let pw = Binary::from_term(args[0])?;
-    let cost = args[1].decode::<u32>()?;
+#[rustler::nif]
+fn nif_hash<'a>(env: Env<'a>, pw: Term<'a>, cost: u32) -> NifResult<Term<'a>> {
+    let pw = Binary::from_term(pw)?;
 
     match bcrypt::hash(pw.as_slice(), cost) {
         Ok(res) => Ok((atoms::ok(), res).encode(env)),
@@ -39,13 +24,10 @@ fn hash<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     }
 }
 
-fn verify<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    if args.len() != 2 {
-        return Err(BadArg);
-    }
-
-    let pw = Binary::from_term(args[0])?;
-    let hash = Binary::from_term(args[1])?;
+#[rustler::nif]
+fn nif_verify<'a>(env: Env<'a>, pw: Term<'a>, hash: Term<'a>) -> NifResult<Term<'a>> {
+    let pw = Binary::from_term(pw)?;
+    let hash = Binary::from_term(hash)?;
     let hash_str = std::str::from_utf8(&hash).map_err(|_e| BadArg)?;
 
     match bcrypt::verify(pw.as_slice(), hash_str) {

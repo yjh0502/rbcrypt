@@ -2,3 +2,4 @@ target
 _build
 priv
 *.beam
+TEST*

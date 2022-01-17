@@ -8,9 +8,9 @@ authors = ["Jihyun Yu <yjh0502@gmail.com>"]
 crate-type = ["dylib"]
 
 [dependencies]
-rustler = "0.21.1"
-rustler_sys = "2.1.0"
-bcrypt = "0.8"
+rustler = "0.23.0"
+rustler_sys = "2.1.1"
+bcrypt = "0.10.1"
 
 [profile.dev]
 opt-level = 3
