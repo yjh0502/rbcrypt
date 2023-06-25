@@ -29,3 +29,14 @@ nif_hash(_Data, _Cost) ->
 
 nif_verify(_Password, _Hash) ->
     ?NOT_LOADED.
+
+-ifdef(EUNIT).
+
+-include_lib("eunit/include/eunit.hrl").
+
+hash_verify_test() ->
+    Input = <<"password">>,
+    {ok, Hash} = hash(Input),
+    ?assertMatch({ok, true}, verify(Input, Hash)).
+
+-endif.
